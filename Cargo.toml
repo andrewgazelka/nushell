@@ -67,6 +67,7 @@ members = [
   "crates/nu-test-support",
   "crates/nu-utils",
   "crates/nuon",
+  "crates/snuon",
   "crates/nu-mcp",
 ]
 
