@@ -89,7 +89,10 @@ impl Evaluator {
         };
 
         // Destructure to satisfy the borrow checker
-        let EvalState { engine_state, stack } = &mut *state;
+        let EvalState {
+            engine_state,
+            stack,
+        } = &mut *state;
 
         // Merge the parsed blocks into the persistent engine state
         engine_state
@@ -97,13 +100,8 @@ impl Evaluator {
             .map_err(|e| shell_error_to_mcp_error(e, engine_state))?;
 
         // Eval the block with persistent state and stack
-        let output = eval_block::<WithoutDebug>(
-            engine_state,
-            stack,
-            &block,
-            PipelineData::empty(),
-        )
-        .map_err(|e| shell_error_to_mcp_error(e, engine_state))?;
+        let output = eval_block::<WithoutDebug>(engine_state, stack, &block, PipelineData::empty())
+            .map_err(|e| shell_error_to_mcp_error(e, engine_state))?;
 
         let results = process_pipeline(output, engine_state)?;
 
@@ -396,7 +394,11 @@ mod tests {
 
         // Access the variable in second call - should persist
         let result = evaluator.eval("$x", None);
-        assert!(result.is_ok(), "Variable should be accessible: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Variable should be accessible: {:?}",
+            result.err()
+        );
     }
 
     #[test]
@@ -410,6 +412,10 @@ mod tests {
 
         // Access the env var in second call - should persist
         let result = evaluator.eval("$env.TEST_VAR", None);
-        assert!(result.is_ok(), "Env var should be accessible: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Env var should be accessible: {:?}",
+            result.err()
+        );
     }
 }
